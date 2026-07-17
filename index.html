@@ -17,16 +17,13 @@
         .star-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: transparent; z-index: -1; overflow: hidden; }
         .star { position: absolute; background: white; border-radius: 50%; animation: twinkle 4s infinite; }
         @keyframes twinkle { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
-
         .section { display: none; min-height: 100vh; align-items: center; justify-content: center; }
         .active { display: flex; }
-
         .card {
             background: rgba(255,255,255,0.08);
             backdrop-filter: blur(16px);
             border: 1px solid rgba(255,255,255,0.15);
         }
-
         .photo-frame {
             transition: all 0.4s ease;
             overflow: hidden;
@@ -37,7 +34,6 @@
         .photo-frame:hover {
             transform: scale(1.05) rotate(1deg);
         }
-
         .memories-scroll {
             display: flex;
             gap: 16px;
@@ -51,20 +47,17 @@
             background: rgba(255,255,255,0.3);
             border-radius: 20px;
         }
-
         /* Адаптивні розміри фото */
         .memories-scroll .photo-frame {
             width: 260px;
             height: 260px;
         }
-
         @media (min-width: 640px) {
             .memories-scroll .photo-frame {
                 width: 280px;
                 height: 280px;
             }
         }
-
         @media (min-width: 1024px) {
             .memories-scroll .photo-frame {
                 width: 300px;
@@ -75,13 +68,13 @@
 </head>
 <body class="text-white">
     <div class="star-bg" id="stars"></div>
-    
+   
     <!-- Екран 1 -->
     <div id="screen1" class="section active flex-col text-center px-6">
         <div class="max-w-2xl">
             <h1 class="title-font text-6xl md:text-7xl mb-4"></h1>
             <p class="text-3xl mb-8">Твій Особливий День</p>
-          
+         
             <div class="grid grid-cols-4 gap-4 max-w-md mx-auto mb-12">
                 <div class="card p-6 rounded-2xl text-center"><div id="days" class="text-5xl font-light">00</div><div class="text-xs">ДНІВ</div></div>
                 <div class="card p-6 rounded-2xl text-center"><div id="hours" class="text-5xl font-light">00</div><div class="text-xs">ГОДИН</div></div>
@@ -93,14 +86,12 @@
             </button>
         </div>
     </div>
-
     <!-- Екран 2 -->
     <div id="screen2" class="section flex-col text-center px-6">
         <h2 class="text-4xl mb-10"></h2>
         <div onclick="openGift()" id="gift" class="cursor-pointer mx-auto text-9xl transition-transform hover:scale-110">🎁</div>
         <p class="mt-10 text-xl">Натисни на подарунок</p>
     </div>
-
     <!-- Екран 3 -->
     <div id="screen3" class="section flex-col px-6">
         <div class="max-w-2xl card p-10 rounded-3xl">
@@ -118,7 +109,6 @@
             </button>
         </div>
     </div>
-
     <!-- Екран 4 -->
     <div id="screen4" class="section flex-col px-6 py-12">
         <h2 class="title-font text-5xl mb-12 text-center">Наші Спогади xD</h2>
@@ -127,7 +117,6 @@
             Переглянути відео
         </button>
     </div>
-
     <!-- Екран 5 -->
     <div id="screen5" class="section flex-col px-6">
         <div class="max-w-4xl w-full">
@@ -142,7 +131,6 @@
             </button>
         </div>
     </div>
-
     <!-- Екран 6 -->
     <div id="screen6" class="section flex-col px-6">
         <div class="max-w-2xl card p-10 rounded-3xl text-center">
@@ -171,19 +159,39 @@
             }
         }
 
-        function startCountdown() {
-            const targetDate = new Date("2026-07-17T00:00:00").getTime();
-            setInterval(() => {
-                const now = new Date().getTime();
-                const distance = targetDate - now;
-                document.getElementById("days").textContent = "00";
-                document.getElementById("hours").textContent = "00";
-                document.getElementById("minutes").textContent =
-                    Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
-                document.getElementById("seconds").textContent =
-                    Math.floor((distance % (1000 * 60)) / 1000).toString().padStart(2, '0');
-            }, 1000);
-        }
+       function startCountdown() {
+    const targetDate = new Date("2026-07-17T00:00:00").getTime();
+
+    setInterval(() => {
+        const now = new Date().getTime();
+        const diff = targetDate - now;
+        
+        // Перевіряємо, чи день народження вже настав
+        const isPast = diff < 0;
+        
+        // Беремо абсолютне значення для розрахунків
+        let distance = Math.abs(diff);
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        distance -= days * (1000 * 60 * 60 * 24);
+
+        const hours = Math.floor(distance / (1000 * 60 * 60));
+        distance -= hours * (1000 * 60 * 60);
+
+        const minutes = Math.floor(distance / (1000 * 60));
+        distance -= minutes * (1000 * 60);
+
+        const seconds = Math.floor(distance / 1000);
+
+        // Формуємо текст з мінусом, якщо час вже минув
+        const displayDays = (isPast ? "-" : "") + days.toString().padStart(2, '0');
+
+        document.getElementById("days").textContent = displayDays;
+        document.getElementById("hours").textContent = hours.toString().padStart(2, '0');
+        document.getElementById("minutes").textContent = minutes.toString().padStart(2, '0');
+        document.getElementById("seconds").textContent = seconds.toString().padStart(2, '0');
+    }, 1000);
+}
 
         let currentScreen = 1;
         function nextScreen() {
